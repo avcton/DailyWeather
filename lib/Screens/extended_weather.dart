@@ -45,32 +45,38 @@ class _Extended_Weather extends State<Extended_Weather> {
                     if (snapshot.hasError) {
                       return Text(snapshot.error.toString());
                     } else if (snapshot.hasData) {
-                      return SizedBox(
-                        height: (size.height - size.height * 21 / 100),
-                        child: ListView.builder(
-                            itemCount: snapshot.data?.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                onTap: () {},
-                                leading: Image.network(
-                                  'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png',
-                                ),
-                                trailing: Text(
-                                    "${weekDayToString(day: snapshot.data?[index].date?.weekday)} at ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
-                                    style: GoogleFonts.bellota(
-                                        textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ))),
-                                title: Text(
-                                    "${snapshot.data?[index].weatherDescription}",
-                                    style: GoogleFonts.bellota(
-                                        textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).primaryColor,
-                                    ))),
-                              );
-                            }),
+                      return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20)),
+                        height: (size.height - size.height * 30 / 100),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: ListView.builder(
+                              itemCount: snapshot.data?.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  onTap: () {},
+                                  leading: Image.network(
+                                    'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png',
+                                  ),
+                                  trailing: Text(
+                                      "${weekDayToString(day: snapshot.data?[index].date?.weekday)} ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
+                                      style: GoogleFonts.bellota(
+                                          textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor,
+                                      ))),
+                                  title: Text(
+                                      "${snapshot.data?[index].weatherDescription}",
+                                      style: GoogleFonts.bellota(
+                                          textStyle: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Theme.of(context).primaryColor,
+                                      ))),
+                                );
+                              }),
+                        ),
                       );
                     }
                   }

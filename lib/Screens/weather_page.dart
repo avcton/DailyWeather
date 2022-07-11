@@ -1,3 +1,4 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:daily_weather/Packages/generate_weather.dart';
 import 'package:daily_weather/Screens/extended_weather.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPage extends State<WeatherPage> {
+  int _currentIndex = 0;
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -24,12 +26,17 @@ class _WeatherPage extends State<WeatherPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _pageController,
-      children: [
-        Scaffold(
-          backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
-          body: Center(
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        children: [
+          Center(
             child: Column(
               children: [
                 Padding(
@@ -54,12 +61,7 @@ class _WeatherPage extends State<WeatherPage> {
                   height: 10,
                 ),
                 Text("Daily Weather Report",
-                    style: GoogleFonts.bellota(
-                        textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24,
-                      color: Theme.of(context).primaryColor,
-                    ))),
+                    style: Theme.of(context).textTheme.headline1),
                 const Divider(
                     height: 50,
                     thickness: 5,
@@ -160,9 +162,41 @@ class _WeatherPage extends State<WeatherPage> {
               ],
             ),
           ),
-        ),
-        Extended_Weather(),
-      ],
+          Extended_Weather()
+        ],
+      ),
+      bottomNavigationBar: BottomNavyBar(
+          backgroundColor: Colors.black,
+          selectedIndex: _currentIndex,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          items: [
+            BottomNavyBarItem(
+                textAlign: TextAlign.center,
+                icon: const Icon(
+                  Icons.cloud_sync_rounded,
+                  color: Colors.white,
+                ),
+                title: const Text(
+                  'Weather',
+                  style: TextStyle(color: Colors.white),
+                )),
+            BottomNavyBarItem(
+                textAlign: TextAlign.center,
+                icon: const Icon(
+                  Icons.line_style,
+                  color: Colors.white,
+                ),
+                title: const Text('Details',
+                    style: TextStyle(color: Colors.white)))
+          ],
+          onItemSelected: (index) {
+            setState(() {
+              _currentIndex = index;
+              _pageController.animateToPage(index,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.ease);
+            });
+          }),
     );
   }
 }
