@@ -57,16 +57,10 @@ class _Extended_Weather extends State<Extended_Weather> {
                               itemBuilder: (context, index) {
                                 return ListTile(
                                   onTap: () {},
-                                  leading: Image.network(
-                                      'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png',
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                    return Text(
-                                      "Error Loading Image...",
-                                      style:
-                                          Theme.of(context).textTheme.headline1,
-                                    );
-                                  }),
+                                  leading: FadeInImage.assetNetwork(
+                                      placeholder: 'assets/weather.png',
+                                      image:
+                                          'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png'),
                                   trailing: Text(
                                       "${weekDayToString(day: snapshot.data?[index].date?.weekday)} ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
                                       style: GoogleFonts.bellota(
