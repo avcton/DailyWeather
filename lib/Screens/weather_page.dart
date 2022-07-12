@@ -26,6 +26,7 @@ class _WeatherPage extends State<WeatherPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
       body: PageView(
@@ -40,13 +41,10 @@ class _WeatherPage extends State<WeatherPage> {
             child: Column(
               children: [
                 const Padding(
-                    padding: EdgeInsets.only(top: 25.0),
-                    child: SizedBox(
-                      child: Image(
+                    padding: EdgeInsets.only(top: 15.0),
+                    child: Image(
                         image: AssetImage('assets/weather.png'),
-                        fit: BoxFit.cover,
-                      ),
-                    )),
+                        fit: BoxFit.fill)),
                 Text("Daily Weather Report",
                     style: Theme.of(context).textTheme.headline1),
                 const Divider(
@@ -56,7 +54,7 @@ class _WeatherPage extends State<WeatherPage> {
                     endIndent: 80,
                     color: Colors.white),
                 Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: const EdgeInsets.only(top: 10.0),
                   child: Text("Today's report",
                       style: GoogleFonts.bellota(
                           textStyle: TextStyle(
@@ -66,7 +64,7 @@ class _WeatherPage extends State<WeatherPage> {
                       ))),
                 ),
                 const SizedBox(
-                  height: 15,
+                  height: 10,
                 ),
                 FutureBuilder<Weather>(
                     future: fetchWeather(),
@@ -77,17 +75,42 @@ class _WeatherPage extends State<WeatherPage> {
                         } else if (snapshot.hasData) {
                           return Column(
                             children: [
-                              Image.network(
+                              SizedBox(
+                                height: size - size * 75 / 100,
+                                child: Image.network(
                                   'http://openweathermap.org/img/wn/${snapshot.data?.weatherIcon}@4x.png',
+                                  fit: BoxFit.fill,
                                   errorBuilder: (context, error, stackTrace) {
-                                return Text(
-                                  "Error Loading Image...",
-                                  style: Theme.of(context).textTheme.headline1,
-                                );
-                              }),
+                                    return Text(
+                                      "Error Loading Image...",
+                                      style:
+                                          Theme.of(context).textTheme.headline1,
+                                    );
+                                  },
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                               Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(20)),
                                 padding: const EdgeInsets.all(20.0),
-                                color: Colors.black,
                                 child: Column(
                                   children: [
                                     Text(
