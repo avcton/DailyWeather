@@ -39,27 +39,14 @@ class _WeatherPage extends State<WeatherPage> {
           Center(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 65.0),
-                  child: Text("Welcome",
-                      style: GoogleFonts.indieFlower(
-                          textStyle: TextStyle(
-                              fontSize: 24,
-                              color: Theme.of(context).primaryColor,
-                              letterSpacing: 0))),
-                ),
-                const SizedBox(
-                  height: 3,
-                ),
-                Text("To",
-                    style: GoogleFonts.indieFlower(
-                        textStyle: TextStyle(
-                      fontSize: 26,
-                      color: Theme.of(context).primaryColor,
-                    ))),
-                const SizedBox(
-                  height: 10,
-                ),
+                const Padding(
+                    padding: EdgeInsets.only(top: 25.0),
+                    child: SizedBox(
+                      child: Image(
+                        image: AssetImage('assets/weather.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    )),
                 Text("Daily Weather Report",
                     style: Theme.of(context).textTheme.headline1),
                 const Divider(
@@ -91,8 +78,13 @@ class _WeatherPage extends State<WeatherPage> {
                           return Column(
                             children: [
                               Image.network(
-                                'http://openweathermap.org/img/wn/${snapshot.data?.weatherIcon}@4x.png',
-                              ),
+                                  'http://openweathermap.org/img/wn/${snapshot.data?.weatherIcon}@4x.png',
+                                  errorBuilder: (context, error, stackTrace) {
+                                return Text(
+                                  "Error Loading Image...",
+                                  style: Theme.of(context).textTheme.headline1,
+                                );
+                              }),
                               Container(
                                 padding: const EdgeInsets.all(20.0),
                                 color: Colors.black,
@@ -167,11 +159,13 @@ class _WeatherPage extends State<WeatherPage> {
       ),
       bottomNavigationBar: BottomNavyBar(
           backgroundColor: Colors.black,
+          showElevation: true,
           selectedIndex: _currentIndex,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           items: [
             BottomNavyBarItem(
                 textAlign: TextAlign.center,
+                activeColor: Colors.grey,
                 icon: const Icon(
                   Icons.cloud_sync_rounded,
                   color: Colors.white,
@@ -182,6 +176,7 @@ class _WeatherPage extends State<WeatherPage> {
                 )),
             BottomNavyBarItem(
                 textAlign: TextAlign.center,
+                activeColor: Colors.grey,
                 icon: const Icon(
                   Icons.line_style,
                   color: Colors.white,

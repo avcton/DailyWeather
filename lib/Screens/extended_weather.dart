@@ -58,8 +58,15 @@ class _Extended_Weather extends State<Extended_Weather> {
                                 return ListTile(
                                   onTap: () {},
                                   leading: Image.network(
-                                    'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png',
-                                  ),
+                                      'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png',
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                    return Text(
+                                      "Error Loading Image...",
+                                      style:
+                                          Theme.of(context).textTheme.headline1,
+                                    );
+                                  }),
                                   trailing: Text(
                                       "${weekDayToString(day: snapshot.data?[index].date?.weekday)} ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
                                       style: GoogleFonts.bellota(
@@ -80,8 +87,11 @@ class _Extended_Weather extends State<Extended_Weather> {
                       );
                     }
                   }
-                  return const CircularProgressIndicator(
-                    color: Colors.white,
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 70),
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
                   );
                 })
           ],
