@@ -9,9 +9,22 @@ class Extended_Weather extends StatefulWidget {
   State<StatefulWidget> createState() => _Extended_Weather();
 }
 
-class _Extended_Weather extends State<Extended_Weather> {
+class _Extended_Weather extends State<Extended_Weather>
+    with AutomaticKeepAliveClientMixin {
+  late Future<List<Weather>> weatherList;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    weatherList = fetchFiveDayWeather();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
@@ -39,7 +52,7 @@ class _Extended_Weather extends State<Extended_Weather> {
               height: 25,
             ),
             FutureBuilder<List<Weather>>(
-                future: fetchFiveDayWeather(),
+                future: weatherList,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasError) {
