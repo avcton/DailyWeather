@@ -16,6 +16,7 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPage extends State<WeatherPage> {
   int _currentIndex = 0;
   final _myscaffold = GlobalKey<ScaffoldState>();
+  TimeOfDay _timeOfDay = const TimeOfDay(hour: 1, minute: 30);
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -32,7 +33,78 @@ class _WeatherPage extends State<WeatherPage> {
     return Scaffold(
       key: _myscaffold,
       backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
-      drawer: Drawer(),
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+        child: ListView(
+          children: [
+            DrawerHeader(
+                child: Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromRGBO(27, 23, 23, 1),
+                  borderRadius: BorderRadius.circular(20)),
+              child: Center(
+                  child: Text(
+                "Daily Weather",
+                style: Theme.of(context).textTheme.headline1,
+              )),
+            )),
+            const SizedBox(
+              height: 120,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.notifications,
+                color: Colors.white,
+              ),
+              title: Text(
+                "Daily Notification",
+                style: Theme.of(context).textTheme.headline1,
+              ),
+              onTap: () {
+                showTimePicker(context: context, initialTime: _timeOfDay)
+                    .then((value) => setState(() {
+                          _timeOfDay = value!;
+                        }));
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.feedback_rounded,
+                color: Colors.white,
+              ),
+              title: Text(
+                "Feedback",
+                style: Theme.of(context).textTheme.headline1,
+              ),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        backgroundColor: const Color.fromRGBO(27, 23, 23, 1),
+                        title: Center(
+                          child: Text(
+                            'Feedback Contact',
+                            style: Theme.of(context).textTheme.headline1,
+                          ),
+                        ),
+                        content: SizedBox(
+                          height: 100,
+                          child: Center(
+                              child: Text(
+                            "avcton@gmail.com",
+                            style: Theme.of(context).textTheme.headline1,
+                          )),
+                        ),
+                      );
+                    });
+              },
+            )
+          ],
+        ),
+      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
