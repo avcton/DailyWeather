@@ -51,56 +51,65 @@ class _Extended_Weather extends State<Extended_Weather>
             const SizedBox(
               height: 25,
             ),
-            FutureBuilder<List<Weather>>(
-                future: weatherList,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    } else if (snapshot.hasData) {
-                      return Container(
-                        decoration: BoxDecoration(
+            RefreshIndicator(
+              onRefresh: () async {
+                setState(() {
+                  weatherList = fetchFiveDayWeather();
+                });
+              },
+              child: FutureBuilder<List<Weather>>(
+                  future: weatherList,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Container(
                             color: Colors.black,
-                            borderRadius: BorderRadius.circular(20)),
-                        height: (size.height - size.height * 30 / 100),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: ListView.builder(
-                              itemCount: snapshot.data?.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  onTap: () {},
-                                  leading: FadeInImage.assetNetwork(
-                                      placeholder: 'assets/weather.png',
-                                      image:
-                                          'http://openweathermap.org/img/wn/${snapshot.data?[index].weatherIcon}@2x.png'),
-                                  trailing: Text(
-                                      "${weekDayToString(day: snapshot.data?[index].date?.weekday)} ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
-                                      style: GoogleFonts.bellota(
-                                          textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor,
-                                      ))),
-                                  title: Text(
-                                      "${snapshot.data?[index].weatherDescription}",
-                                      style: GoogleFonts.bellota(
-                                          textStyle: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Theme.of(context).primaryColor,
-                                      ))),
-                                );
-                              }),
-                        ),
-                      );
+                            child: Text(snapshot.error.toString(),
+                                style: Theme.of(context).textTheme.headline1));
+                      } else if (snapshot.hasData) {
+                        return Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(20)),
+                          height: (size.height - size.height * 30 / 100),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 10, bottom: 10),
+                            child: ListView.builder(
+                                itemCount: snapshot.data?.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    onTap: () {},
+                                    leading: Image.asset(
+                                      'assets/WeatherCodes/${snapshot.data?[index].weatherIcon}@2x.png',
+                                    ),
+                                    trailing: Text(
+                                        "${weekDayToString(day: snapshot.data?[index].date?.weekday)} ${DateFormat('h:mm a').format(snapshot.data?[index].date ?? DateTime.now())}",
+                                        style: GoogleFonts.bellota(
+                                            textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor,
+                                        ))),
+                                    title: Text(
+                                        "${snapshot.data?[index].weatherDescription}",
+                                        style: GoogleFonts.bellota(
+                                            textStyle: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor,
+                                        ))),
+                                  );
+                                }),
+                          ),
+                        );
+                      }
                     }
-                  }
-                  return const Padding(
-                    padding: EdgeInsets.only(top: 70),
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  );
-                })
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 70),
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    );
+                  }),
+            )
           ],
         ),
       ),

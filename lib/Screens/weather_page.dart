@@ -1,6 +1,9 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:daily_weather/Packages/notification_handler.dart';
 import 'package:daily_weather/Screens/extended_weather.dart';
 import 'package:daily_weather/Screens/weather_today.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/material.dart';
 
 class WeatherPage extends StatefulWidget {
@@ -13,10 +16,26 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPage extends State<WeatherPage> {
   int _currentIndex = 0;
   final _myscaffold = GlobalKey<ScaffoldState>();
-  TimeOfDay _timeOfDay = const TimeOfDay(hour: 1, minute: 30);
+  TimeOfDay _timeOfDay = const TimeOfDay(hour: 8, minute: 00);
   final PageController _pageController = PageController(
     initialPage: 0,
   );
+
+  @override
+  void initState() {
+    tz.initializeTimeZones();
+    listenNotifications();
+    super.initState();
+  }
+
+  void listenNotifications() {
+    NotificationHandler.onNotifications.stream.listen((String? payLoad) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (context) => WeatherPage()),
+      );
+    });
+  }
 
   @override
   void dispose() {
@@ -57,10 +76,35 @@ class _WeatherPage extends State<WeatherPage> {
                 style: Theme.of(context).textTheme.headline1,
               ),
               onTap: () {
-                showTimePicker(context: context, initialTime: _timeOfDay)
-                    .then((value) => setState(() {
-                          _timeOfDay = value!;
-                        }));
+                showTimePicker(
+                    context: context,
+                    initialTime: _timeOfDay,
+                    builder: (context, child) {
+                      return Theme(
+                          data: Theme.of(context).copyWith(
+                              colorScheme:
+                                  const ColorScheme.dark(primary: Colors.teal),
+                              textTheme: TextTheme(
+                                  displayLarge:
+                                      Theme.of(context).textTheme.headline1),
+                              textButtonTheme: TextButtonThemeData(
+                                  style: TextButton.styleFrom(
+                                      primary: Colors.white))),
+                          child: child!);
+                    }).then((value) {
+                  DateTime fromDate = DateTime.now();
+                  DateTime newDateTime = DateTime(fromDate.year, fromDate.month,
+                      fromDate.day, value!.hour, value.minute);
+                  NotificationHandler().showScheduledNotification(
+                    1,
+                    "Daily Weather",
+                    "Check out today's weather!",
+                    tz.TZDateTime.from(newDateTime, tz.local),
+                  );
+                  setState(() {
+                    _timeOfDay = value;
+                  });
+                });
               },
             ),
             ListTile(
@@ -87,11 +131,11 @@ class _WeatherPage extends State<WeatherPage> {
                           ),
                         ),
                         content: SizedBox(
-                          height: 100,
+                          height: 50,
                           child: Center(
-                              child: Text(
-                            "avcton@gmail.com",
-                            style: Theme.of(context).textTheme.headline1,
+                              child: TextButton(
+                            onPressed: () {},
+                            child: const Text("avcton@gmail.com"),
                           )),
                         ),
                       );
