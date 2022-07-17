@@ -51,6 +51,7 @@ class NotificationHandler {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       androidAllowWhileIdle: true,
+      matchDateTimeComponents: DateTimeComponents.time,
     );
   }
 }

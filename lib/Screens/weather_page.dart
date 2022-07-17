@@ -1,5 +1,6 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:daily_weather/Packages/notification_handler.dart';
+import 'package:daily_weather/Packages/storage.dart';
 import 'package:daily_weather/Screens/extended_weather.dart';
 import 'package:daily_weather/Screens/weather_today.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -16,7 +17,7 @@ class WeatherPage extends StatefulWidget {
 class _WeatherPage extends State<WeatherPage> {
   int _currentIndex = 0;
   final _myscaffold = GlobalKey<ScaffoldState>();
-  TimeOfDay _timeOfDay = const TimeOfDay(hour: 8, minute: 00);
+  late TimeOfDay _timeOfDay;
   final PageController _pageController = PageController(
     initialPage: 0,
   );
@@ -24,17 +25,19 @@ class _WeatherPage extends State<WeatherPage> {
   @override
   void initState() {
     tz.initializeTimeZones();
-    listenNotifications();
+    DataStorage().readFile().then((value) {
+      var list = getTime(value);
+      setState(() {
+        _timeOfDay =
+            TimeOfDay(hour: int.parse(list[0]), minute: int.parse(list[1]));
+      });
+    });
     super.initState();
   }
 
-  void listenNotifications() {
-    NotificationHandler.onNotifications.stream.listen((String? payLoad) {
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(builder: (context) => WeatherPage()),
-      );
-    });
+  List<String> getTime(String val) {
+    return val
+        .split(':'); // Splitting the time and hour to create an object later
   }
 
   @override
@@ -92,9 +95,10 @@ class _WeatherPage extends State<WeatherPage> {
                                       primary: Colors.white))),
                           child: child!);
                     }).then((value) {
+                  DataStorage().writeFile("${value!.hour}:${value.minute}");
                   DateTime fromDate = DateTime.now();
                   DateTime newDateTime = DateTime(fromDate.year, fromDate.month,
-                      fromDate.day, value!.hour, value.minute);
+                      fromDate.day, value.hour, value.minute);
                   NotificationHandler().showScheduledNotification(
                     1,
                     "Daily Weather",
