@@ -4,7 +4,7 @@ A weather application built in flutter fulfilling all of your needs.
 <br/> This app uses OpenWeather Public API to fetch weather forecast using you precise location.
 <br/> Location and Internet are required in-order for the app to work properly.
 
-# Things Implemented So far:
+# Things Implemented So far
 - [ Current Weather fetch through API ]
 - [ Five day weather fetch ]
 - [ Notifications ]
