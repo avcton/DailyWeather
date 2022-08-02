@@ -108,6 +108,7 @@ class _Extended_Weather extends State<Extended_Weather>
                                                           .primaryColor,
                                                     ))),
                                           ),
+                                          const SizedBox(height: 20),
                                           Expanded(
                                             child: ListView.builder(
                                                 itemCount:
