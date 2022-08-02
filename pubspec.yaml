@@ -104,10 +104,10 @@ flutter:
 
 flutter_native_splash:
   color: "#1B1717"
-  image: assets/weather_white.png
+  image: assets/50.png
 
   android_12:
-    image: assets/weather_white.png
+    image: assets/50.png
     color: "#1B1717"
 
 flutter_icons:
