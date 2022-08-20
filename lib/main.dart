@@ -1,5 +1,6 @@
 import 'package:daily_weather/Packages/notification_handler.dart';
 import 'package:daily_weather/Packages/storage.dart';
+import 'package:daily_weather/Screens/animated_splash.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -45,7 +46,7 @@ class _MyApp extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Daily Weather',
-      home: WeatherPage(),
+      home: WeatherAnimation(),
       theme: ThemeData(
           textTheme: TextTheme(
               headline1: GoogleFonts.bellota(
